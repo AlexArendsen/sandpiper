@@ -17,6 +17,12 @@
 		</nav>
 
 		<div class="row" id="results-container">
+			<div class="col sm12">
+				<div ng-hide="results.length" id="no-files-notice">
+					<h4 class="grey-text">No files found</h4>
+					<p class="grey-text">Click the "+" button in the lower right to add a file!</p>
+				</div>
+			</div>
 			<div class="col s12 m4 l3" ng-repeat="item in results | filter:searchText | limitTo: 25">
 				<div class="medium card">
 					<a href="authorize.php?file={{ item.file }}" target="_blank" class="card-image grey lighten-4" style="background-image:url('{{ item.image }}');"></a>
