@@ -2,8 +2,11 @@
 	height: 128px;
 }
 
+#login-mobile-shim {
+	height: 48px;
+}
+
 #login-wrapper {
-	margin-top: 16px;
 	margin-bottom: 64px;
 }
 
