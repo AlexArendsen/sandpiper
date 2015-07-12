@@ -1,0 +1,36 @@
+#top-nav {
+	padding-left:16px;
+}
+
+#add-button {
+	position: fixed;
+	bottom: 32px;
+	right: 32px;
+}
+
+.tag {
+	padding:2px 4px;
+	border-radius: 4px;
+	-webkit-border-radius: 4px;
+	margin: 2px 0 0 2px;
+	display:inline-block;
+}
+
+.card-image {
+	max-height: 164px;
+	overflow-y: hidden;
+}
+
+.file-title {
+	display: block;
+	font-size: larger !important;
+	line-height: 1.3em !important;
+}
+
+.card-subtitle {
+	display: block;
+}
+
+.card-title-wrapper {
+	margin-bottom: 16px;
+}

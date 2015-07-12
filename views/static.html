@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		Sandpiper File Manager
+	</title>
+
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+	<!-- bower:css -->
+	<link rel="stylesheet" href="bower_components/materialize/bin/materialize.css" />
+	<!-- endbower -->
+
+	<link rel="stylesheet" href="build/sandpiper.min.css" />
+
+	<!-- bower:js -->
+	<script src="bower_components/jquery/dist/jquery.js"></script>
+	<script src="bower_components/materialize/bin/materialize.js"></script>
+	<script src="bower_components/angular/angular.js"></script>
+	<!-- endbower -->
+
+	<script src="build/sandpiper.min.js"></script>
+</head>
+<body ng-app="sandpiper">
+	<main>
+		<div class="container" id="content-root">
+			<div class="row" id="login-wrapper">
+				<div class="col s12 m6 l6">
+					<!-- App Brand -->
+					<div class="right-align" id="login-brand">
+						<h1 class="thin">Sandpiper</h1>
+						<p class="flow-text">
+							Flat File Manager
+						</p>
+					</div>
+				</div>
+				<div class="col s12 m6 l6">
+					<form action="login.php" method="POST" id="login-form">
+						<div class="card">
+							<div class="card-content">
+								<span class="grey-text card-title">Log In</span>
+								<div class="row">
+									<div class="input-field col s12">
+										<input type="text" name="username" id="login-username">
+										<label for="login-username">Username</label>
+									</div>
+									<div class="input-field col s12">
+										<input type="password" name="password" id="login-password">
+										<label for="login-password">Password</label>
+									</div>
+								</div>
+							</div>
+							<div class="card-action right-align">
+								<button class="btn-flat grey-text waves-effect waves-light" type="submit">
+									Log In
+								</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</main>
+
+	<footer class="page-footer">
+		<div class="container white-text">
+			<p>
+				Sandpiper by Alex Arendsen
+			</p>
+		</div>
+	</footer>
+</body>
+</html>

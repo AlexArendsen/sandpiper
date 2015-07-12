@@ -1,0 +1,19 @@
+A simpler Sandpiper implementation without folders
+---
+
+FILES
+ID		INT(11)
+NAME		VARCHAR(255)
+FNAME		VARCHAR(255)
+TAGS		TEXT
+
+Design
+---
+This variation will be even simpler. No folders, just upload your shit and search if you want something.
+
+Methods
+---
+SaveFile(String name[, File file, String tags]) -> success integer
+DeleteFile(int fileId) -> success integer
+DumpObjects() -> List of names, tags and URLs. Used for front-end searching.
+Search(String query) -> List of names, tags and URLs matching the given query

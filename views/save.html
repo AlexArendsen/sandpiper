@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+
+	{% include "topnav.html" %}
+
+	<div class="row">
+		<div class="col s12">
+			<h3>Errors / Messages</h3>
+			<ul class="list-group">
+				{% if errors %}
+					{% for e in errors %}
+						<li class="list-group-item">{[{ e }]}</li>
+					{% endfor %}
+				{% else %}
+					<li class="list-group-item">
+						<i>Changed saved with no errors!</i>
+					</li>
+				{% endif %}
+			</ul>
+		</div>
+	</div>
+{% endblock %}

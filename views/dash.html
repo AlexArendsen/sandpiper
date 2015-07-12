@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+	<div id="dash-wrapper" ng-controller="DashCtrl">
+		<a href="edit.php" class="btn-floating btn-large waves-effect waves-light amber" id="add-button">
+			<i class="material-icons">add</i>
+		</a>
+
+		{% include "topnav.html" %}
+
+		<nav class="light-blue lighten-4">
+			<div class="nav-wrapper">
+				<form action="javascript:void(0)" method="GET">
+					<div class="input-field">
+						<input type="search" name="q" id="search" ng-model="searchText" placeholder="Search for files" required>
+						<label for="search"><i class="material-icons">search</i></label>
+					</div>
+				</form>
+			</div>
+		</nav>
+
+		<div class="row" id="results-container">
+			<div class="col s12 m4 l3" ng-repeat="item in results | filter:searchText | limitTo: 25">
+				<div class="medium card">
+					<div class="card-image grey lighten-4">
+						<a href="uploads/{{ item.file }}" target="_blank">
+							<img ng-src="{{ item.image }}" alt="{{ item.title }}">
+						</a>
+					</div>
+					<div class="card-content">
+						<div class="card-title-wrapper">
+							<span class="card-title file-title">
+								<a href="uploads/{{ item.file }}">{{ item.title }}</a>
+							</span>
+							<small class="grey-text card-subtitle">
+								{{ item.edate }}
+							</small>
+						</div>
+						<span class="tag light-blue lighten-2 white-text">{{ item.type }}</span>
+						<span class="tag grey lighten-4 grey-text" ng-repeat="tag in item.tags | limitTo: 5">{{ tag }}</span>
+					</div>
+					<div class="card-action">
+						<a href="uploads/{{ item.file }}" target="_blank" class="right">View</a>
+						<a href="edit.php?i={{ item.id }}">Edit</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

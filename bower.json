@@ -1,0 +1,33 @@
+{
+  "name": "sandpiper",
+  "version": "1.0.0",
+  "description": "PHP + MySQL Flat File Server and Web App",
+  "main": "index.php",
+  "keywords": [
+    "php",
+    "mysql",
+    "file",
+    "manager",
+    "web"
+  ],
+  "authors": [
+    "Alex Arensden"
+  ],
+  "license": "GPL-2.0",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "materialize": "~0.97.0",
+    "jquery": "~2.1.4",
+    "angular": "~1.4.2",
+    "angular-materialize": "*"
+  },
+  "resolutions": {
+    "materialize": "~0.97.0"
+  }
+}

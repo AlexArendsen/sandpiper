@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<title>
+		{% block pagetitle %}Sandpiper File Manager{% endblock %}
+	</title>
+
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+	<!-- bower:css -->
+	<link rel="stylesheet" href="bower_components/materialize/bin/materialize.css" />
+	<!-- endbower -->
+
+	<link rel="stylesheet" href="lib/materialize-tags/materialize-tags.min.css">
+	<link rel="stylesheet" href="build/sandpiper.min.css" />
+
+	<!-- bower:js -->
+	<script src="bower_components/jquery/dist/jquery.js"></script>
+	<script src="bower_components/materialize/bin/materialize.js"></script>
+	<script src="bower_components/angular/angular.js"></script>
+	<script src="bower_components/angular-materialize/src/angular-materialize.js"></script>
+	<!-- endbower -->
+
+	<script src="lib/materialize-tags/materialize-tags.min.js"></script>
+	<script src="build/sandpiper.min.js"></script>
+</head>
+<body ng-app="sandpiper">
+	<main>
+		<div class="container" id="content-root">
+			{% block content %}
+			{% endblock %}
+		</div>
+	</main>
+
+	<footer class="page-footer grey lighten-4">
+		<div class="container grey-text">
+			<p>
+				Sandpiper by Alex Arendsen
+			</p>
+		</div>
+	</footer>
+</body>
+</html>
