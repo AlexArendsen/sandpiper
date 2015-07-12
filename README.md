@@ -32,3 +32,11 @@ edit your uploads.
 5. Ensure that your server user and group have read and write permissions in
 ... the `tmp/` and `uploads/` directories
 6. Run `bower install` to download the necessary dependencies.
+
+## Credit
+
+Sandpiper by Alex Arendsen, licensed under GPLv2.0 (see `LICENSE`).
+
+File type icons found in `static/img/filetypes` is Teambox's
+[Free-file-icons](https://github.com/teambox/Free-file-icons), licensed under
+the MIT license.

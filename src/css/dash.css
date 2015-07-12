@@ -19,6 +19,9 @@
 .card-image {
 	max-height: 164px;
 	overflow-y: hidden;
+	display: block;
+	background-size: cover;
+	background-position: 25% 50%;
 }
 
 .file-title {
