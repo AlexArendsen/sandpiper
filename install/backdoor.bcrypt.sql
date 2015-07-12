@@ -1,3 +1,4 @@
+-- Backdoor login script. Username is DEFAULT, password is DEFAULTPASSWORD
 INSERT INTO
 	USERS (USERNAME, PASSWORD)
 VALUES
