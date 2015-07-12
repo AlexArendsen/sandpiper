@@ -31,14 +31,24 @@
 			if(!file_exists($fpath)){
 				send404();
 			} else {
+				$filetime = filemtime($fpath);
 				$etag = MD5(filemtime($fpath));
 				header('Cache-Control: public, max-age=31536000');
-				if(isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] == $etag) {
+
+				$notChanged = 
+					(isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) >= $filetime)
+						||
+					(isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] == $etag);
+
+				if($notChanged) {
 					send304();
 					exit;
 				} else {
+					$nextmonth = time() + 2419200;
 					header('Content-Type: '.mime_content_type($fpath));
 					header('Content-Length: '.filesize($fpath));
+					header('Expires: '.date('r',$nextmonth));
+					header('Last-Modified: '.date('r',$filetime));
 					header('etag: '.$etag);
 					readfile($fpath);
 					exit;
