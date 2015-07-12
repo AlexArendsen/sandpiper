@@ -15,7 +15,7 @@ edit your uploads.
 
 * **Simple**: Sandpiper strives to accomplish the goal of hosting files through
 a web interface with as few frills as possible.
-* **Flat**: To keep things simple, *folders are intentionally ommitted from
+* **Flat**: To keep things simple, *folders are intentionally omitted from
 Sandpiper*. Instead, files are described using text **tags**.
 * **Responsive**: The Sandpiper UI is built on
 [MaterializeCSS](http://materializecss.com/), making it just as usable on
