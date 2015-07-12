@@ -27,7 +27,6 @@
 					if($passpass){
 						$_SESSION['user'] = intval($uid);
 						$_SESSION['username'] = $uname;
-						error_log("Login Success!");
 						header("Location: index.php");
 					} else {
 						homeError($twig, "Invalid Login",$arg);
