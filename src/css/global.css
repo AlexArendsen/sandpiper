@@ -1,5 +1,10 @@
 #content-root {
-	margin-top: 16px;
+	margin-top: -38px;
+}
+
+#top-nav {
+	margin-top: 0;
+	padding: 0 0 102px 0;
 }
 
 nav {

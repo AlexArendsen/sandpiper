@@ -26,6 +26,11 @@
 </head>
 <body ng-app="sandpiper">
 	<main>
+
+		{% if loggedIn %}
+			{% include "topnav.html" %}
+		{% endif %}
+
 		<div class="container" id="content-root">
 			{% block content %}
 			{% endblock %}
