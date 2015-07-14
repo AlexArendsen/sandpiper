@@ -24,7 +24,7 @@ mobile devices as it is on desktop.
 ## Dependencies & Installation
 
 Sandpiper is designed for and tested on LAMP configurations. The following
-dependencies are provided for installation on LAMP platforms:
+dependencies are provided for installations on LAMP platforms:
 
 * Apache >= 2.4.7 (not tested on previous versions)
 	* Rewrite module (`mod_rewrite`) enabled
@@ -40,8 +40,8 @@ dependencies are provided for installation on LAMP platforms:
 server name, login credentials, and the db name you picked in step 2.
 4. Run `install.sql` and `backdoor.bcrypt.sql` found within the `install/`
 directory against your databse.
-5. Ensure that your server user and group have read and write permissions in
-the `tmp/` and `uploads/` directories
+5. Ensure that your server user (eg, `www-data` or `http`) and group have read
+and write permissions in the `uploads/` directory
 6. Run `bower install` to download the necessary dependencies.
 
 ## Credit
