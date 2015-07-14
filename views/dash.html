@@ -17,10 +17,17 @@
 		</nav>
 
 		<div class="row" id="results-container">
-			<div class="col sm12">
-				<div ng-hide="results.length" id="no-files-notice">
-					<h4 class="grey-text">No files found</h4>
+			<div class="col s12">
+				<div ng-hide="results.length||error" id="no-files-notice">
+					<h4 class="grey-text lighten-2">No files found</h4>
 					<p class="grey-text">Click the "+" button in the lower right to add a file!</p>
+				</div>
+			</div>
+			<div class="col s12">
+				<div ng-show="error" id="error-notice">
+					<h4 class="grey-text lighten-2">Oh no!</h4>
+					<p class="grey-text">There was an error retreiving your files. Please report the incident to your web administrator with the following the error message:</p>
+					<pre>{{ error }}</pre>
 				</div>
 			</div>
 			<div class="col s12 m4 l3" ng-repeat="item in results | filter:searchText | limitTo: 25">

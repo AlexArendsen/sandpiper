@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "PHP + MySQL Flat File Server and Web App",
   "main": "index.php",
+  "repository": "https://github.com/AlexArendsen/sandpiper.git",
   "dependencies": {
     "grunt": "^0.4.5",
     "grunt-contrib-concat": "^0.5.1",

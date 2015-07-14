@@ -31,10 +31,10 @@
 					));
 				echo json_encode($out);
 			} else {
-				echo error("Internal Error (Statement Execution)");
+				echo error("Server error (failed to execute statement)");
 			}
 		} else {
-			echo error("Internal Error (Statement Preparation)");
+			echo error("Server error (failed to prepare statement)");
 		}
 	}
 

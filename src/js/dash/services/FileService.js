@@ -1,7 +1,9 @@
 app.factory('files',['$http','fileUtils',function FileServiceInitialize($http,fileUtils){
 	
 	return {
-		dump: function(callback){
+		dump: function(success,error){
+			error = error||function(){}
+
 			// Fetch files from server
 			$http.get('dump.php')
 				.success(function(data, status){
@@ -11,28 +13,27 @@ app.factory('files',['$http','fileUtils',function FileServiceInitialize($http,fi
 							data.payload[idx].type = inf.extension.toUpperCase()
 							data.payload[idx].image = inf.image
 						}
-						callback(data.payload)
+						success(data.payload)
 					} else {
-						console.error("Files were not received")
-						console.error(data)
+						error(data.error)
 					}
 				})
 				.error(function(data, status){
-					console.error("Dump returned error:")
-					console.error(data)
+					error(data.error)
 				})
 		},
-		getFile: function(fileId,callback){
+		getFile: function(fileId,success,error){
+			error = error||function(){}
 			$http.get('getFile.php?fileId='+fileId)
 				.success(function(data, status){
 					if(data.success){
-						callback(data.fileInfo)
+						success(data.fileInfo)
 					} else {
-						console.error("File information not receieved")
+						error(data.error)
 					}
 				})
 				.error(function(data, status){
-
+					error(data.error)
 				})
 		}
 	}

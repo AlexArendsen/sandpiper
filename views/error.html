@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+	<div class="row hide-on-small-only" id="login-bulkhead">
+		<div class="col s12"></div>
+	</div>
+	<div class="row hide-on-med-and-up" id="login-mobile-shim">
+		<div class="col s12"></div>
+	</div>
+	<h1 class="thin">Error {[{ ecode }]} ({[{ elabel }]})</h1>
+	<p>
+		{[{ emessage }]}
+	</p>
+	<p>
+		<a href="index.php">Click here to return to Sandpiper</a>.
+	</p>
+{% endblock %}

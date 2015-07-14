@@ -42,7 +42,7 @@
 				array_push($warnings, "Could not find all fields of existing record: ID (from request) = (".$_POST['file-id']."), ID (from query) = (".$record['public_id']."), FName (from query) = (".$record['fname'].") ");
 			}
 
-			// Upload new document, if necessary
+			// Upload new file, if necessary
 			if($fileUploaded) {
 				// Check for safe extension
 				$fileExt = pathinfo($_FILES['file-file']['name'],PATHINFO_EXTENSION);
@@ -53,22 +53,22 @@
 					$targetFile = substr($record['public_id']."-".$fileName,0,254-strlen($fileExt)).".".$fileExt;
 					$targetPath = "uploads/".$targetFile;
 
-					// Delete old document
+					// Delete old file
 					if($record['fname'] && !unlink("uploads/".$record['fname'])) {
-						array_push($errors,"Failed to remove old document file");
+						array_push($errors,"Failed to remove old file");
 					}
 
 					if(move_uploaded_file($_FILES['file-file']['tmp_name'], $targetPath)){
 						if($s=$i->prepare("UPDATE FILES SET FNAME = ? WHERE PUBLIC_ID = ?")) {
 							$s->bind_param('ss',$targetFile,$_POST['file-id']);
-							if(!$s->execute()){array_push($errors,"Error updating publication record document field");}
+							if(!$s->execute()){array_push($errors,"Error updating record file field");}
 							$s->close();
-						} else {array_push($errors,"Internal server error while preparing document script");}
-					} else {array_push($errors,"Failed to upload / move document file");}
-				} else {array_push($errors,"Document upload rejected: unsafe file extension");}
+						} else {array_push($errors,"Internal server error while preparing file script");}
+					} else {array_push($errors,"Failed to upload / move file");}
+				} else {array_push($errors,"File upload rejected: unsafe file extension");}
 			}
 
-			// Update publication record plain fields
+			// Update record plain fields
 			if($s=$i->prepare("
 				UPDATE
 					FILES
@@ -79,7 +79,7 @@
 					PUBLIC_ID = ?
 			")) {
 				$s->bind_param('sss',$_POST['file-title'],$_POST['file-tags'],$_POST['file-id']);
-				if(!$s->execute()){array_push($errors,"Error while updating publication plain fields");}
+				if(!$s->execute()){array_push($errors,"Error while updating record plain fields");}
 				$s->close();
 			} else {array_push($errors,"Statement preparation error on plain field update");}
 
@@ -87,7 +87,7 @@
 
 		} else {
 
-			// Insert new publication record
+			// Insert new record
 			// Insert record
 			$fileId = uniqid();
 			$insertSuccess = 0;
@@ -103,9 +103,9 @@
 			")) {
 				$s->bind_param('isss',$_SESSION['user'],$fileId,$_POST['file-title'],$_POST['file-tags']);
 				if($s->execute()) {$insertSuccess = 1;}
-				else {array_push($errors,"Failed to insert new publication record; aborting before uploading files: $i->error");}
+				else {array_push($errors,"Failed to insert new record");}
 				$s->close();
-			} else {array_push($errors,"Failed to prepare publication record; aborting before uploading files");}
+			} else {array_push($errors,"Failed to prepare record insertaion statement; aborting before uploading files");}
 
 			// Upload document file if necessary
 			if($fileUploaded && $insertSuccess) {
@@ -121,11 +121,11 @@
 					if(move_uploaded_file($_FILES['file-file']['tmp_name'], $targetPath)){
 						if($s=$i->prepare("UPDATE FILES SET FNAME = ? WHERE PUBLIC_ID = ?")) {
 							$s->bind_param('ss',$targetFile,$fileId);
-							if(!$s->execute()){array_push($errors,"Failed to associate new document file with publication record");}
+							if(!$s->execute()){array_push($errors,"Failed to associate new file with record");}
 							$s->close();
-						} else {array_push($errors,"Failed to prepare document update statement");}
-					} else {array_push($errors,"Failed to upload / move document file");}
-				} else {array_push($errors,"Document upload rejected: unsafe file extension");}
+						} else {array_push($errors,"Failed to prepare file update statement");}
+					} else {array_push($errors,"Failed to upload / move file");}
+				} else {array_push($errors,"File upload rejected: unsafe file extension");}
 			}
 
 		}
@@ -137,7 +137,7 @@
 		$redir = $_POST['redirection'];
 		if($redir) {
 			if($redir=="continue"){
-				header("Location: edit.php");
+				header("Location: edit.php"); // User clicked "Create and add another"
 			} else {header("Location: index.php");}
 		} else {header("Location: index.php");}
 

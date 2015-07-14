@@ -2,6 +2,8 @@ app.controller('DashCtrl',['$scope','files',function InitializeDashController($s
 
 	files.dump(function(payload){
 		$scope.results = payload
+	}, function(error){
+		$scope.error=error
 	})
 	
 }])
