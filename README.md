@@ -40,3 +40,5 @@ Sandpiper by Alex Arendsen, licensed under GPLv2.0 (see `LICENSE`).
 File type icons found in `static/img/filetypes` is Teambox's
 [Free-file-icons](https://github.com/teambox/Free-file-icons), licensed under
 the MIT license.
+
+CAPTCHA is provided by Claviska's [simple-php-captcha](https://github.com/claviska/simple-php-captcha). It is licensed under the MIT license.
