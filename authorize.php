@@ -55,6 +55,6 @@
 				}
 			}
 		}
-	} else {echo send403();}
+	} else {send403();}
 
 ?>
