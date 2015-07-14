@@ -30,6 +30,15 @@
 								<input type="password" name="password" id="login-password">
 								<label for="login-password">Password</label>
 							</div>
+							{% if captchaSrc %}
+								<div class="input-field col s12">
+									<img src="{[{ captchaSrc }]}">
+								</div>
+								<div class="input-field col s12">
+									<input type="text" id="login-captcha" name="captcha">
+									<label for="login-captcha">Please enter the text that appears above</label>
+								</div>
+							{% endif %}
 						</div>
 					</div>
 					<div class="card-action right-align">
