@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 	<div id="dash-wrapper" ng-controller="DashCtrl">
-		<a href="edit.php" class="btn-floating btn-large waves-effect waves-light amber" id="add-button">
+		<a href="file.edit.php" class="btn-floating btn-large waves-effect waves-light amber" id="add-button">
 			<i class="material-icons">add</i>
 		</a>
 
@@ -47,7 +47,7 @@
 					</div>
 					<div class="card-action">
 						<a href="uploads/{{ item.file }}" target="_blank" class="right">View</a>
-						<a href="edit.php?i={{ item.id }}">Edit</a>
+						<a href="file.edit.php?i={{ item.id }}">Edit</a>
 					</div>
 				</div>
 			</div>

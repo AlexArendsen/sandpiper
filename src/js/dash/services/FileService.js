@@ -5,7 +5,7 @@ app.factory('files',['$http','fileUtils',function FileServiceInitialize($http,fi
 			error = error||function(){}
 
 			// Fetch files from server
-			$http.get('dump.php')
+			$http.get('file.dump.php')
 				.success(function(data, status){
 					if(data.success){
 						for(idx in data.payload) {
@@ -24,7 +24,7 @@ app.factory('files',['$http','fileUtils',function FileServiceInitialize($http,fi
 		},
 		getFile: function(fileId,success,error){
 			error = error||function(){}
-			$http.get('getFile.php?fileId='+fileId)
+			$http.get('file.get.php?fileId='+fileId)
 				.success(function(data, status){
 					if(data.success){
 						success(data.fileInfo)

@@ -45,10 +45,16 @@
   if($arg['loggedIn']) {
     $arg['user'] = $_SESSION['user'];
     $arg['username'] = $_SESSION['username'];
+    $arg['isAdmin'] = $_SESSION['isAdmin'];
   }
 
-  // Error
+  // Error JSON response convenience function
   function error($emsg) {
   	echo "{\"error\":\"$emsg\",\"success\":false}";
+  }
+
+  // Succcess JSON response convenience function
+  function success($msg) {
+  	echo "{\"message\":\"$msg\",\"success\":true}";
   }
 ?>

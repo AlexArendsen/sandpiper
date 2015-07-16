@@ -22,6 +22,8 @@
 	<script src="bower_components/angular-materialize/src/angular-materialize.js"></script>
 	<!-- endbower -->
 
+	<script src="lib/isaac.js"></script>
+	<script src="lib/bcrypt.js"></script>
 	<script src="build/sandpiper.min.js"></script>
 </head>
 <body ng-app="sandpiper">
@@ -31,16 +33,19 @@
 			{% include "topnav.html" %}
 		{% endif %}
 
-		<div class="container" id="content-root">
-			{% block content %}
-			{% endblock %}
+		<div id="content-wrapper">
+			<div class="container" id="content-root">
+				{% block content %}
+				{% endblock %}
+			</div>
 		</div>
+
 	</main>
 
 	<footer class="page-footer grey lighten-4">
 		<div class="container grey-text">
 			<p>
-				Sandpiper by Alex Arendsen
+				Sandpiper by Alex Arendsen, GPLv2.0 2015. <a href="http://github.com/AlexArendsen/sandpiper/">Code on GitHub</a>.
 			</p>
 		</div>
 	</footer>

@@ -5,14 +5,20 @@
 			<i class="material-icons">menu</i>
 		</a>
 		<ul class="right hide-on-med-and-down">
-			<li><a href="edit.php">Add File</a></li>
+			<li><a href="file.edit.php">Add File</a></li>
+			{% if isAdmin %}
+				<li><a href="users.php">Manage Users</a></li>
+			{% endif %}
 			<li><a href="logout.php">Logout</a></li>
 		</ul>
 		<ul class="side-nav" id="mobile-menu">
 			<li><a href="index.php"><h3 class="thin">Sandpiper</h3></a></li>
 			<li class="divider"></li>
 			<li><a href="index.php"><i class="material-icons right">folder</i>My Files</a></li>
-			<li><a href="edit.php"><i class="material-icons right">add</i>Add File</a></li>
+			<li><a href="file.edit.php"><i class="material-icons right">add</i>Add File</a></li>
+			{% if isAdmin %}
+				<li><a href="users.php"><i class="material-icons right">account_circle</i>Manage Users</a></li>
+			{% endif %}
 			<li><a href="logout.php"><i class="material-icons right">eject</i>Logout</a></li>
 		</ul>
 	</div>

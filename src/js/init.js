@@ -4,7 +4,7 @@ function showMessage(msg,timeout) {
 	Materialize.toast(msg,timeout||4000)
 }
 
-// Initialize Sidenav
 $(document).ready(function(){
+	// Initialize Sidenav
 	$('.button-collapse').sideNav()
 })

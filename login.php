@@ -21,15 +21,17 @@
 	if($LOGIN_CAPTCHA_TRIGGERED && $_POST['captcha']!=$_SESSION['captcha']['code']) {
 		invalidLogin($twig,"Text does not match image",$arg);
 	} else if($_POST['username'] && $_POST['password']) {
-		if($s=$i->prepare("SELECT ID, PASSWORD, USERNAME FROM USERS WHERE USERNAME = ?")) {
+		if($s=$i->prepare("SELECT ID, PUBLIC_ID, PASSWORD, USERNAME, ISADMIN FROM USERS WHERE USERNAME = ?")) {
 			$s->bind_param('s',$_POST['username']);
-			$s->bind_result($uid,$pwd,$uname);
+			$s->bind_result($uid,$upid,$pwd,$uname,$isAdmin);
 			if($s->execute()) {
 				if($s->fetch() && $uid && $pwd) {
 					if(password_verify($_POST['password'],$pwd)) {
 						$_SESSION['LOGIN_FAILS'] = 0;
 						$_SESSION['user'] = intval($uid);
+						$_SESSION['userPublic'] = $upid;
 						$_SESSION['username'] = $uname;
+						$_SESSION['isAdmin'] = $isAdmin;
 						header("Location: index.php");
 					} else {invalidLogin($twig,"Invalid Login",$arg);} // Username found, password mismatch
 				} else {invalidLogin($twig,"Invalid Login",$arg);} // Username not found

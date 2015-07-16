@@ -51,10 +51,10 @@
 					// Generate new filename
 					$fileName = preg_replace('/[^\da-z]/i','-',pathinfo($_FILES['file-file']['name'],PATHINFO_FILENAME));
 					$targetFile = substr($record['public_id']."-".$fileName,0,254-strlen($fileExt)).".".$fileExt;
-					$targetPath = "uploads/".$targetFile;
+					$targetPath = "uploads/".$_SESSION['userPublic']."/".$targetFile;
 
 					// Delete old file
-					if($record['fname'] && !unlink("uploads/".$record['fname'])) {
+					if($record['fname'] && !unlink("uploads/".$_SESSION['userPublic']."/".$record['fname'])) {
 						array_push($errors,"Failed to remove old file");
 					}
 
@@ -116,7 +116,7 @@
 					// Generate filename
 					$fileName = preg_replace('/[^\da-z]/i','-',pathinfo($_FILES['file-file']['name'],PATHINFO_FILENAME));
 					$targetFile = substr($fileId."-".$fileName,0,254-strlen($fileExt)).".".$fileExt;
-					$targetPath = "uploads/".$targetFile;
+					$targetPath = "uploads/".$_SESSION['userPublic']."/".$targetFile;
 
 					if(move_uploaded_file($_FILES['file-file']['tmp_name'], $targetPath)){
 						if($s=$i->prepare("UPDATE FILES SET FNAME = ? WHERE PUBLIC_ID = ?")) {
@@ -137,7 +137,7 @@
 		$redir = $_POST['redirection'];
 		if($redir) {
 			if($redir=="continue"){
-				header("Location: edit.php"); // User clicked "Create and add another"
+				header("Location: file.edit.php"); // User clicked "Create and add another"
 			} else {header("Location: index.php");}
 		} else {header("Location: index.php");}
 

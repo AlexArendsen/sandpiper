@@ -2,7 +2,7 @@
 {% block content %}
 	<div id="edit-wrapper" ng-controller="EditorCtrl">
 
-		<form action="save.php" method="POST" enctype="multipart/form-data">
+		<form action="file.save.php" method="POST" enctype="multipart/form-data">
 
 			<input type="hidden" name="file-id" id="file-id" value="{[{ fileId }]}">
 			<input type="hidden" name="file-action" id="file-action">
@@ -43,7 +43,7 @@
 
 						<div class="card-action">
 							<a href="index.php" class="grey lighten-4 grey-text btn waves-effect waves-light">Cancel</a>
-							<a href="delete.php?i={{ file.id }}" ng-hide="file.isNew" class="red lighten-2 white-text btn waves-effect waves-light">Delete</a>
+							<a href="file.delete.php?i={{ file.id }}" ng-hide="file.isNew" class="red lighten-2 white-text btn waves-effect waves-light">Delete</a>
 							<div class="right">
 								<button class="btn waves-effect waves-light light-blue lighten-2" type="submit" name="redirection" value="normal">{{ editor.submitlabel }}</button>
 								<button class="btn waves-effect waves-light light-blue lighten-3" ng-hide="!file.isNew" type="submit" name="redirection" value="continue">{{ editor.continuelabel }}</button>

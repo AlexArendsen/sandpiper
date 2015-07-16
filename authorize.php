@@ -4,7 +4,7 @@
 	require_once 'errors.php';
 
 	$fname = $_REQUEST['file'];
-	$fpath = 'uploads/'.$fname;
+	$fpath = 'uploads/'.$_SESSION['userPublic'].'/'.$fname;
 
 	if($arg['loggedIn']) {
 		if(!$_REQUEST['file']) {

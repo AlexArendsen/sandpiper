@@ -55,3 +55,7 @@ the MIT license.
 CAPTCHA is provided by Claviska's
 [simple-php-captcha](https://github.com/claviska/simple-php-captcha). It is
 licensed under the MIT license.
+
+Front-end hashing provided by nevins-b's
+[javascript-bcrypt](https://github.com/nevins-b/javascript-bcrypt), which
+includes Yves-Marie K. Rinquin's random number generator `issac.js`.
