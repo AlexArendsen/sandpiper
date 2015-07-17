@@ -13,7 +13,7 @@
 		"500" => makeErrorTuple("Internal Server Error","The server has encountered an unexpected error. Please report this incident to your web administrator with details describing how / when the error occurred.")
 	);
 
-	function sendError($twig,$ecode,$message) {
+	function sendError($twig,$ecode) {
 		header("HTTP/1.1 $ecode");
 		$arg = array();
 		$arg['ecode'] = $ecode;
