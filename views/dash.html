@@ -17,14 +17,20 @@
 		</nav>
 
 		<div class="row" id="results-container">
-			<div class="col s12">
-				<div ng-hide="results.length||error" id="no-files-notice">
+			<div class="col s10 offset-s1 m8 offset-m2" ng-hide="ready" id="preloader">
+				<div class="progress">
+					<div class="indeterminate"></div>
+				</div>
+			</div>
+
+			<div class="col s12" ng-hide="results.length||error||!ready">
+				<div id="no-files-notice">
 					<h4 class="grey-text lighten-2">No files found</h4>
 					<p class="grey-text">Click the "+" button in the lower right to add a file!</p>
 				</div>
 			</div>
-			<div class="col s12">
-				<div ng-show="error" id="error-notice">
+			<div class="col s12" ng-show="error">
+				<div id="error-notice">
 					<h4 class="grey-text lighten-2">Oh no!</h4>
 					<p class="grey-text">There was an error retreiving your files. Please report the incident to your web administrator with the following the error message:</p>
 					<pre>{{ error }}</pre>

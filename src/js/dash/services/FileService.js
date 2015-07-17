@@ -1,8 +1,9 @@
 app.factory('files',['$http','fileUtils',function FileServiceInitialize($http,fileUtils){
 	
 	return {
-		dump: function(success,error){
+		dump: function(success,error,always){
 			error = error||function(){}
+			always = always||function(){}
 
 			// Fetch files from server
 			$http.get('file.dump.php')
@@ -14,12 +15,15 @@ app.factory('files',['$http','fileUtils',function FileServiceInitialize($http,fi
 							data.payload[idx].image = inf.image
 						}
 						success(data.payload)
+						always()
 					} else {
 						error(data.error)
+						always()
 					}
 				})
 				.error(function(data, status){
 					error(data.error)
+					always()
 				})
 		},
 		getFile: function(fileId,success,error){
