@@ -5,7 +5,7 @@
 
 		// Check that password has been hashed
 		if(strlen($_POST['password'])!=60){
-			echo error("Could not verify password integrity (".$_POST['password'].")");
+			echo error("Could not verify password integrity");
 		} else {
 			$errors = array();
 
