@@ -5,7 +5,7 @@
 
 			<div class="card">
 				<div class="card-content">
-					<a class="btn waves-effect waves-light modal-trigger right" href="#modal-create-user">Create New User</a>
+					<a class="btn waves-effect waves-light modal-trigger right" href="#modal-user-form" ng-click="clearUser()">Create New User</a>
 					<span class="card-title grey-text">Manage Users</span>
 					<table class="stiped">
 						<thead>
@@ -17,7 +17,7 @@
 						<tbody>
 							<tr ng-repeat="user in users">
 								<td>
-									<a href="#!" ng-click="userSelect(user)">{{ user.username }}</a>
+									<a href="#modal-user-form" class="modal-trigger" ng-click="userSelect(user)">{{ user.username }}</a>
 								</td>
 								<td style="text-align:right">
 									<span ng-show="user.isAdmin" class="grey-text">Administrator</span>
@@ -31,14 +31,17 @@
 				</div>
 			</div>
 
-			<div id="modal-create-user" class="modal">
-				<form action="javascript:void(0)" id="user-form" ng-submit="userCreate(newUser)">
+			<div id="modal-user-form" class="modal">
+				<form action="javascript:void(0)" id="user-form" ng-submit="userSubmit(editor)">
 					<div class="modal-content">
-						<h4 class="grey-text thin">Create New User</h4>
+						<h4 class="grey-text thin">
+							<span ng-hide="editor.id">Create New User</span>
+							<span ng-show="editor.id">Update User</span>
+						</h4>
 						<div class="row">
 							<div class="col s12">
 								<div class="input-field">
-									<input type="text" ng-model="newUser.username" length="255" id="username-input" required>
+									<input type="text" ng-model="editor.username" length="255" id="username-input" required>
 									<label for="username-input">Username</label>
 								</div>
 							</div>
@@ -46,7 +49,7 @@
 						<div class="row">
 							<div class="col s12">
 								<div class="input-field">
-									<input type="password" ng-model="newUser.password" id="password-input" required>
+									<input type="password" ng-required="!editor.id" ng-model="editor.password" id="password-input">
 									<label for="password-input">Password</label>
 								</div>
 							</div>
@@ -54,7 +57,7 @@
 						<div class="row">
 							<div class="col s12">
 								<div class="input-field">
-									<input type="password" ng-model="newUser.passwordConfirm" id="password-confirm-input" required>
+									<input type="password" ng-required="!editor.id" ng-model="editor.passwordConfirm" id="password-confirm-input">
 									<label for="password-confirm-input">Password Confirm</label>
 								</div>
 							</div>
@@ -62,24 +65,44 @@
 						<div class="row">
 							<div class="col s12">
 								<p>
-									<input type="checkbox" ng-model="newUser.isAdmin" id="isAdminCheckbox" class="filled-in">
+									<input type="checkbox" ng-model="editor.isAdmin" id="isAdminCheckbox" class="filled-in">
 									<label for="isAdminCheckbox">Is Administrator? (May manage user accounts)</label>
 								</p>
 							</div>
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="submit" class="btn-flat waves-effect waves-light">Create User</button>
+						<button type="submit" class="btn-flat waves-effect waves-light">
+							<span ng-hide="editor.id">Create User</span>
+							<span ng-show="editor.id">Update User</span>
+						</button>
 						<button type="button" ng-click="newUserClear()" class="btn-flat waves-effect waves-light modal-close">Cancel</button>
 					</div>
 				</form>
 			</div>
 
-			<div id="modal-edit-user" class="modal">
-				<div class="modal-content">
-					
-				</div>
-			</div>
+			<!-- <div id="modal-edit-user" class="modal">
+				<form action="javascript:void(0)" ng-submit="editUser(editedUser)">
+					<div class="modal-content">
+						<h4 class="thin grey-text">Edit User</h4>
+						<div class="row">
+							<div class="col s12">
+								<div class="input-field">
+									<input type="text" id="edit-username" ng-model="editedUser.username" placeholder="Username">
+									<label for="edit-username">Username</label>
+								</div>
+							</div>
+						</div>
+			
+						.row>
+			
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn-flat waves-effect waves-light">Update User</button>
+						<button type="button" class="btn-flat waves-effect waves-light modal-close" ng-click="editedUserClear()">Cancel</button>
+					</div>
+				</form>
+			</div> -->
 
 		</div>
 	</div>

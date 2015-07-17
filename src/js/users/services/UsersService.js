@@ -71,6 +71,46 @@ app.factory('users',['$http',function UserServiceInitialization($http){
 				})
 			})
 
+		},
+		update: function UsersServiceUpdate(user,success,error){
+			error = error||function(){}
+
+			console.log("Updating user:")
+			console.log(user)
+
+			function tryJSON(src){try{ return JSON.parse(src) } catch(e) {return src}}
+			function submit(user){
+				$.ajax({
+					url: 'user.update.php',
+					type: 'POST',
+					data: user,
+					success: function(res){
+						data = tryJSON(res)
+						if(!data.success){
+							error(data.error)
+						} else {
+							success(data)
+						}
+					},
+					error: function(xhr){
+						data = tryJSON(xhr.responseText);
+						error(data.error);
+					}
+				})
+			}
+
+			if(user.password) { // User is changing password, hash it
+				if(user.password!=user.passwordConfirm) {
+					return error("Passwords do not match");
+				} else {
+					bc = new bCrypt()
+					bc.hashpw(user.password,bc.gensalt(9),function(hash){
+						submit({username: user.username, password: hash, isAdmin: !!user.isAdmin, id: user.id})
+					})
+				}
+			} else { // User isn't changing password, leave it
+				submit({username: user.username||"", isAdmin: !!user.isAdmin, id: user.id})
+			}
 		}
 	}
 }])

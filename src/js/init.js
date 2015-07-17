@@ -8,6 +8,9 @@ $(document).ready(function(){
 	// Initialize Sidenav
 	$('.button-collapse').sideNav()
 
-	// Initialize modal triggers
-	$('.modal-trigger').leanModal()
+	// Initialize modal triggers on demand
+	$('body').on("click",".modal-trigger:not(.modal-trigger-initialized)",function(){
+		$('.modal-trigger:not(.modal-trigger-initialized)').leanModal().addClass('modal-trigger-initialized')
+		$(this).trigger('click')
+	})
 })

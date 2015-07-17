@@ -18,30 +18,61 @@ app.controller('UsersCtrl',['$scope','users',function UsersControllerInitializat
 		}
 	}
 
-	$scope.userCreate = function UserControllerCreateUser(newUser) {
-		users.create(newUser,function UserControllerCreateUserSuccess(data){
-			$scope.users.push({
-				id: data.userData.id,
-				username: data.userData.username,
-				isAdmin: !!data.userData.isAdmin
+	$scope.userSubmit = function UserControllerSubmitUser(userFormInput) {
+
+		if(isNewUser = !userFormInput.id) {
+
+			// Insert user
+			console.log("Insert user:")
+			users.create(userFormInput,function UserControllerCreateUserSuccess(data){
+				$scope.users.push({
+					id: data.userData.id,
+					username: data.userData.username,
+					isAdmin: !!data.userData.isAdmin
+				})
+				$('#modal-user-form').closeModal();
+				Materialize.toast("User created successfully!",4000);
+				$scope.$apply()
+			},function UserControllerCreateUserError(message){
+				Materialize.toast(message,4000);
 			})
-			$('#modal-create-user').closeModal();
-			Materialize.toast("User created successfully!",4000);
-			$scope.$apply()
-		},function UserControllerCreateUserError(message){
-			Materialize.toast(message,4000);
-		})
+		} else {
+
+			// Update user
+			console.log("Update user:")
+			users.update(userFormInput, function UserControllerUpdateUserSuccess(data){
+				if((idx=$scope._userIndex(data.userData.id))!=-1){
+					$scope.users[idx] = data.userData;
+				}
+				$('#modal-user-form').closeModal()
+				Materialize.toast("User updated successfully!",4000)
+				$scope.$apply()
+			}), function UserControllerUpdateUserError(message) {
+				Materialize.toast(message,4000)
+			}
+
+		}
+
 	}
 
-	$scope.newUserClear = function UserControllerClearNewUser() {
-		$scope.newUser = {}
-	}
-
-	$scope.userEdit = function UserControllerEditUser(user) {
-		users.edit(newUser)
+	$scope.clearUser = function UserControllerClearUser() {
+		$scope.editor = {}
 	}
 
 	$scope.userSelect = function UserControllerSelectUser(user) {
-		$scope.editedUser = user
+		$scope.editor = {
+			username: user.username,
+			isAdmin: !!user.isAdmin,
+			id: user.id
+		}
+	}
+
+	$scope._userIndex = function(userId) {
+		for(idx in $scope.users) {
+			if($scope.users.id==userId){
+				return idx
+			}
+		}
+		return -1;
 	}
 }])
