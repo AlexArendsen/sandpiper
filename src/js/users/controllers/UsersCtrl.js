@@ -23,7 +23,6 @@ app.controller('UsersCtrl',['$scope','users',function UsersControllerInitializat
 		if(isNewUser = !userFormInput.id) {
 
 			// Insert user
-			console.log("Insert user:")
 			users.create(userFormInput,function UserControllerCreateUserSuccess(data){
 				$scope.users.push({
 					id: data.userData.id,
@@ -39,11 +38,10 @@ app.controller('UsersCtrl',['$scope','users',function UsersControllerInitializat
 		} else {
 
 			// Update user
-			console.log("Update user:")
 			users.update(userFormInput, function UserControllerUpdateUserSuccess(data){
 				if((idx=$scope._userIndex(data.userData.id))!=-1){
 					$scope.users[idx] = data.userData;
-				}
+				} else {console.error("Failed to find user with ID "+data.userData.id);}
 				$('#modal-user-form').closeModal()
 				Materialize.toast("User updated successfully!",4000)
 				$scope.$apply()
@@ -69,7 +67,7 @@ app.controller('UsersCtrl',['$scope','users',function UsersControllerInitializat
 
 	$scope._userIndex = function(userId) {
 		for(idx in $scope.users) {
-			if($scope.users.id==userId){
+			if($scope.users[idx].id==userId){
 				return idx
 			}
 		}

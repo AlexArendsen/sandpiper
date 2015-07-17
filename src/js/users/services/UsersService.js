@@ -75,9 +75,6 @@ app.factory('users',['$http',function UserServiceInitialization($http){
 		update: function UsersServiceUpdate(user,success,error){
 			error = error||function(){}
 
-			console.log("Updating user:")
-			console.log(user)
-
 			function tryJSON(src){try{ return JSON.parse(src) } catch(e) {return src}}
 			function submit(user){
 				$.ajax({
