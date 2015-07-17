@@ -42,7 +42,7 @@
 					<div class="card-content">
 						<div class="card-title-wrapper">
 							<span class="card-title file-title">
-								<a href="uploads/{{ item.file }}">{{ item.title }}</a>
+								<a href="authorize.php?file={{ item.file }}">{{ item.title }}</a>
 							</span>
 							<small class="grey-text card-subtitle">
 								{{ item.edate }}
@@ -52,7 +52,7 @@
 						<span class="tag grey lighten-4 grey-text" ng-repeat="tag in item.tags | limitTo: 5">{{ tag }}</span>
 					</div>
 					<div class="card-action">
-						<a href="uploads/{{ item.file }}" target="_blank" class="right">View</a>
+						<a href="authorize.php?file={{ item.file }}" target="_blank" class="right">View</a>
 						<a href="file.edit.php?i={{ item.id }}">Edit</a>
 					</div>
 				</div>
