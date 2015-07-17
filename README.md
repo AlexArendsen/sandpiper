@@ -7,6 +7,8 @@ PHP + MySQL Flat File Server and Web App
 
 **NOTE**: Sandpiper is still in development. Use at your own risk.
 
+![http://i.imgur.com/Zyne0iU.png](Sandpiper Dashboard)
+
 Sandpiper is a simple, flat, and responsive web app for uploading and
 downloading your files. It has a minimalist web interface built with
 [MaterializeCSS](http://materializecss.com/) and
