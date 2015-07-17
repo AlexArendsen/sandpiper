@@ -47,7 +47,6 @@ app.factory('users',['$http',function UserServiceInitialization($http){
 
 			// Hash password
 			bc = new bCrypt()
-			console.log("Hashing password...")
 			bc.hashpw(newUser.password,bc.gensalt(9),function(hash){
 
 				// Have to use jQuery's ajax for POST since Angular's is broken on PHP
@@ -62,7 +61,7 @@ app.factory('users',['$http',function UserServiceInitialization($http){
 						if(!data.success){
 							error(data.error);
 						} else {
-							success()
+							success(data)
 						}
 					},
 					error: function(xhr){

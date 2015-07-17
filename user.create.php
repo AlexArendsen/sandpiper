@@ -38,7 +38,14 @@
 			if(count($errors)>1) {
 				echo error("There was an error while creating the user");
 			} else {
-				echo success("");
+				echo json_encode(array(
+					"success" => "true",
+					"userData" => array(
+						"id" => $userId,
+						"username" => $_POST['username'],
+						"isAdmin" => $isAdmin
+					)
+				));
 			}
 		}
 	} else {echo error("Access Denied");}

@@ -7,4 +7,7 @@ function showMessage(msg,timeout) {
 $(document).ready(function(){
 	// Initialize Sidenav
 	$('.button-collapse').sideNav()
+
+	// Initialize modal triggers
+	$('.modal-trigger').leanModal()
 })

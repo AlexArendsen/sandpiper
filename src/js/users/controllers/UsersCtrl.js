@@ -19,15 +19,29 @@ app.controller('UsersCtrl',['$scope','users',function UsersControllerInitializat
 	}
 
 	$scope.userCreate = function UserControllerCreateUser(newUser) {
-		users.create(newUser,function UserControllerCreateUserSuccess(){
+		users.create(newUser,function UserControllerCreateUserSuccess(data){
 			$scope.users.push({
-				username: newUser.username,
-				isAdmin: !!newUser.isAdmin
+				id: data.userData.id,
+				username: data.userData.username,
+				isAdmin: !!data.userData.isAdmin
 			})
+			$('#modal-create-user').closeModal();
 			Materialize.toast("User created successfully!",4000);
 			$scope.$apply()
 		},function UserControllerCreateUserError(message){
 			Materialize.toast(message,4000);
 		})
+	}
+
+	$scope.newUserClear = function UserControllerClearNewUser() {
+		$scope.newUser = {}
+	}
+
+	$scope.userEdit = function UserControllerEditUser(user) {
+		users.edit(newUser)
+	}
+
+	$scope.userSelect = function UserControllerSelectUser(user) {
+		$scope.editedUser = user
 	}
 }])
