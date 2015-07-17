@@ -13,7 +13,7 @@ Sandpiper is a simple, flat, and responsive web app for uploading and
 downloading your files. It has a minimalist web interface built with
 [MaterializeCSS](http://materializecss.com/) and
 [AngularJS](http://angularjs.org/) that let you quickly search through and
-edit your uploads.
+manage your uploads.
 
 * **Simple**: Sandpiper strives to accomplish the goal of hosting files through
 a web interface with as few frills as possible.
