@@ -40,9 +40,16 @@ dependencies are provided for installations on LAMP platforms:
 server name, login credentials, and the db name you picked in step 2.
 4. Run `install.sql` and `backdoor.bcrypt.sql` found within the `install/`
 directory against your databse.
-5. Ensure that your server user (eg, `www-data` or `http`) and group have read
-and write permissions in the `uploads/` directory
-6. Run `bower install` to download the necessary dependencies.
+5. Create the directory `uploads/de4d2e5d-b744`
+6. Ensure that your server user (eg, `www-data` or `http`) and group have read
+and write permissions in the `uploads/` directory and everything within it
+7. Run `bower install` to download the necessary dependencies.
+8. Create a scheduled job on your server to empty the `uploads/.trash`
+directory on a regular interval.
+
+Log into the web interface with the username `DEFAULT` and password
+`DEFAULTPASSWORD`. The default user account may be removed and replaced with
+additional accounts through the web interface.
 
 ## Credit
 
