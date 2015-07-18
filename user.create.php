@@ -1,52 +1,76 @@
 <?php
 	require_once 'init.php';
+	require_once 'utils.php';
+
+	/**
+	 * @param mysqli $mysqliLink: MySQLi link to database
+	 * @param string $userPublicId: public_id of user to be created
+	 * @param string $username: username of user to be created
+	 * @param string $passhash: bcrypt hashed password for the user to be
+	 * 		created
+	 * @param int $isAdmin: boolean integer indicitating whether or the
+	 * 		user to be created is an administrator.
+	 *
+	 * @return void
+	 *
+	 * @throws mysqli_sql_exception: Thrown if an unexpected database issue
+	 * 		is encountered.
+	 */
+	function createUserRecord($mysqliLink, $userPublicId, $username, $passhash, $isAdmin) {
+		if($s=$mysqliLink->prepare("
+			INSERT INTO USERS (
+				PUBLIC_ID,
+				USERNAME,
+				PASSWORD,
+				ISADMIN
+			) VALUES (?,?,?,?)
+		")) {
+			$s->bind_param('sssi',$userPublicId,$username,$passhash,$isAdmin);
+			if(!$s->execute()){throw new mysqli_sql_exception("Error while executing user insert statement");}
+			$out = array(
+				"id" => $userPublicId,
+				"username" => $username,
+				"isAdmin" => $isAdmin
+			);
+			$s->close();
+			return $out;
+		} else {throw new mysql_sql_exception("Error while preparing user insert statement");}
+	}
+
+	/**
+	 * @param  string $uploadsDirectory: Parent directory for uploads. Include
+	 * 		trailing slash
+	 * @param  string $userPublicId: New user public ID
+	 * @return void
+	 *
+	 * @throws RuntimeException: Thrown if there is an issue creating the
+	 * 		user's directory
+	 */
+	function createUserUploadDirectory($uploadsDirectory, $userPublicId) {
+		if(!mkdir("./".$uploadsDirectory.$userPublicId,755)) {
+			throw new RuntimeException("Failed to create upload directory for new user");
+		}
+	}
+
+
 
 	if($arg['loggedIn'] && $arg['isAdmin']) {
 
 		// Check that password has been hashed
-		if(strlen($_POST['password'])!=60){
-			echo error("Could not verify password integrity");
-		} else {
-			$errors = array();
+		verifyPasswordIntegrity($_POST['password']);
 
-			$insertSuccess = false;
-			$userId = uniqid();
-			if($s=$i->prepare("
-				INSERT INTO USERS (
-					PUBLIC_ID,
-					USERNAME,
-					PASSWORD,
-					ISADMIN
-				) VALUES (?,?,?,?)
-					
-			")) {
-				$isAdmin = filter_var($_POST['isAdmin'],FILTER_VALIDATE_BOOLEAN);
-				$s->bind_param('sssi',$userId,$_POST['username'],$_POST['password'],$isAdmin);
-				if(!$s->execute()){array_push($errors,"Error while executing prepared statement");}
-				else{$insertSuccess=true;}
-				$s->close();
-			} else {array_push($errors,"Error while preparing statement");}
+		// Create user record
+		$userId = uniqid();
+		$isAdmin = filter_var($_POST['isAdmin'],FILTER_VALIDATE_BOOLEAN);
+		$newUserRecord = createUserRecord($i, $userId, $_POST['username'], $_POST['password'], $isAdmin);
 
-			// Create uploads director for user
-			$directorySuccess = false;
-			if(!$insertSuccess || !mkdir("./uploads/$userId",0755)){
-				array_push($errors,"Failed to create upload directory for new user");
-			} else {$directorySuccess = true;}
+		// Create uploads directory for user
+		createUserUploadDirectory("uploads/",$userId);
 
-			foreach($errors as $e) {error_log("User Creation Error: $e");}
+		echo json_encode(array(
+			"success" => true,
+			"userData" => $newUserRecord
+		));
 
-			if(count($errors)>1) {
-				echo error("There was an error while creating the user");
-			} else {
-				echo json_encode(array(
-					"success" => "true",
-					"userData" => array(
-						"id" => $userId,
-						"username" => $_POST['username'],
-						"isAdmin" => $isAdmin
-					)
-				));
-			}
-		}
 	} else {echo error("Access Denied");}
 ?>

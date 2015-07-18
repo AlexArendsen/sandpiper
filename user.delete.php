@@ -1,36 +1,62 @@
 <?php
 	require_once 'init.php';
+	require_once 'utils.php';
+
+	/**
+	 * Deletes a user's database record. Cascades delete to user's file records
+	 * as well
+	 * 
+	 * @param  mysqli $mysliLink: MySQLi link to database
+	 * @param  string $userPublicId: public_id of user to be deleted
+	 * @return void
+	 *
+	 * @throws mysqli_sql_exception: Thrown if an unexpected database issue
+	 * 		is encountered.
+	 */
+	function deleteUserRecord($mysqliLink, $userPublicId) {
+		if($s=$mysqliLink->prepare("
+			DELETE FROM
+				USERS
+			WHERE
+				PUBLIC_ID = ?"
+		)) {
+			$s->bind_param('s',$userPublicId);
+			if(!$s->execute()){
+				throw new mysqli_sql_exception("Unexpected error while executing user deletion script");
+			}
+			$s->close();
+		} else {throw new mysql_sql_exception("Unexpected error while preparing user deletion script");}
+	}
+
+	/**
+	 * Moves a user's uploads directory to the trash.
+	 *
+	 * @param  string $uploadsDirectory: Upload directory. Include trailing
+	 * 		slash.
+	 * @param  string $userPublicId: public_id of user whose uploads directory
+	 * 		should be deleted
+	 * @return void
+	 *
+	 * @throws RuntimeException: Thrown if user's uploads directory cannot be
+	 *		moved to trash
+	 */
+	function evacuateUserUploadsDirectory($uploadsDirectory, $userPublicId) {
+		if(!rename("./".$uploadsDirectory.$userPublicId."/","./".$uploadsDirectory.".trash/".$userPublicId)) {
+			throw new RuntimeException("Failed to move user upload directory to trash");
+		}
+	}
 
 	if($arg['loggedIn'] && $arg['isAdmin']) {
 
-		$errors = array();
+		// Move storage directory to trash
+		$userRecord = getUserRecord($i,$_GET['i']);
+		evacuateUserUploadsDirectory("uploads/",$userRecord['public_id']);
+		
+		// Delete user record (file records will delete via cascade)
+		deleteUserRecord($i, $userRecord['public_id']);
 
-		// 1 - Move storage directory to trash
-		$moveSuccess = false;
-		if($s=$i->prepare("SELECT PUBLIC_ID FROM USERS WHERE PUBLIC_ID = ?")) {
-			$s->bind_param('s',$_GET['i']);
-			$s->bind_result($pid);
-			if($s->execute() && $s->fetch()){
-				if(rename("./uploads/$pid/","./uploads/.trash/$pid")) {$moveSuccess = true;}
-				else {array_push($errors,"Failed to move user uploads directory to trash");}
-			} else {array_push($errors,"Error while executing public ID retreival statement");}
-			$s->close();
-		} else {array_push($errors,"Error while preparing ID retreival statement");}
+		echo success("User deleted successfully");
 
-		// 2 - Delete user record (file records will delete via cascade)
-		$deleteSuccess = false;
-		if($moveSuccess && $s=$i->prepare("DELETE FROM USERS WHERE PUBLIC_ID = ?")) {
-			$s->bind_param('s',$_GET['i']);
-			if($s->execute()){
-				$deleteSuccess = true;
-			} else {array_push($errors,"Unexpected error while deleting user");}
-			$s->close();
-		} else {array_push($errors,"Unexpected error while deleting user");}
-
-		foreach($errors as $e) {error_log("User Deletion Error: $e");}
-
-		if($moveSuccess && $deleteSuccess) {
-			echo success();
-		} else {echo error("Could not delete user. Please contact your administrator.");}
+		
 	} else {echo error("Access Denied");}
 ?>

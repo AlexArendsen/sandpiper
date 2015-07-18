@@ -2,38 +2,50 @@
 
 	require_once 'init.php';
 
-	if(!$arg['loggedIn'] || !$arg['isAdmin']) {
-		echo error("Access Denied");
-	} else {
-		if($s=$i->prepare("
+	/**
+	 * @param  mysqli $mysqliLink: MySQLi link to database
+	 * @return array: Array of associative arrays for every user with the 
+	 * 		following keys:
+	 * 			"id" => User public ID
+	 * 			"username" => User username
+	 * 			"isAdmin" => Boolean integer indicating whether user is an
+	 * 				administrator or not
+	 *
+	 * @throws mysqli_sql_exception: Thrown if an unexpected database issue
+	 * 		is encountered. 
+	 */
+	function dumpUsers($mysqliLink) {
+		if($s=$mysqliLink->prepare("
 			SELECT
 				PUBLIC_ID,
 				USERNAME,
 				ISADMIN
 			FROM
 				USERS
-			")){
-			$s->bind_result($pid,$uname,$isadmin);
+		")){
+			$s->bind_result($pid,$username,$isAdmin);
 			if($s->execute()){
-				$usersOut = array();
+				$out = array();
 				while($s->fetch()){
-					array_push($usersOut,array(
-							"id" => $pid,
-							"username" => $uname,
-							"isAdmin" => $isadmin
-						));
+					array_push($out,array(
+						"id" => $pid,
+						"username" => $username,
+						"isAdmin" => $isAdmin
+					));
 				}
-				$out = array(
-					"success" => true,
-					"payload" => $usersOut
-					);
-				echo json_encode($out);
-			} else {
-				echo error("Internal Error (Statement Execution)");
-			}
-		} else {
-			echo error("Internal Error (Statement Preparation)");
-		}
+				$s->close();
+				return $out;
+			} else {throw new mysqli_sql_exception("Internal Error (Statement Execution)");}
+		} else {throw new mysqli_sql_exception("Internal Error (Statement Preparation)");}
 	}
+
+
+	if($arg['loggedIn'] && $arg['isAdmin']) {
+		$dump = dumpUsers($i);
+		echo json_encode(array(
+			"success" => true,
+			"payload" => $dump
+		));
+	} else {echo error("Access Denied");}
 
 ?>

@@ -2,10 +2,18 @@
 
 	require_once 'init.php';
 
-	if(!$arg['loggedIn']) {
-		echo error("Access Denied");
-	} else {
-		if($s=$i->prepare("
+	/**
+	 * @param mysqli $mysqliLink: MySQLi link to database
+	 * @param int $ownerId: ID of user whose files will be dumped
+	 * 
+	 * @return array: Array of associative arrays containing all files owned
+	 * 		by the given user
+	 *
+	 * @throws mysqli_sql_exception: Thrown if an unexpected databse issue
+	 * 		is encountered
+	 */
+	function dumpFiles($mysqliLink,$ownerId) {
+		if($s=$mysqliLink->prepare("
 			SELECT
 				PUBLIC_ID,
 				NAME,
@@ -18,12 +26,12 @@
 				OWNER_ID = ?
 			ORDER BY
 				ENTRY_DATE DESC")){
-			$s->bind_param("i",$arg['user']);
+			$s->bind_param("i",$ownerId);
 			$s->bind_result($id,$name,$fname,$edate,$tags);
 			if($s->execute()){
-				$filesOut = array();
-				while($s->fetch()){
-					array_push($filesOut,array(
+				$out = array();
+				while($s->fetch()) {
+					array_push($out,array(
 							"id" => $id,
 							"title" => $name,
 							"file" => $fname,
@@ -31,17 +39,21 @@
 							"tags" => explode(',', $tags)
 						));
 				}
-				$out = array(
-					"success" => true,
-					"payload" => $filesOut
-					);
-				echo json_encode($out);
-			} else {
-				echo error("Internal Error (Statement Execution)");
-			}
-		} else {
-			echo error("Internal Error (Statement Preparation)");
-		}
+				$s->close();
+				return $out;
+			} else {throw new mysqli_sql_exception("Error while executing file dump statement");}
+		} else {throw new mysqli_sql_exception("Error while preparing file dump statement");}
+	}
+
+
+	if($arg['loggedIn']) {
+		$dump = dumpFiles($i,$_SESSION['user']);
+		echo json_encode(array(
+			"success" => true,
+			"payload" => $dump
+		));
+	} else {
+		echo error("Access Denied");
 	}
 
 ?>

@@ -14,11 +14,12 @@ app.controller('EditorCtrl',['$scope','files',function($scope,files){
 
 		files.getFile(id,function(fileInfo) {
 			$scope.file = fileInfo;
-			$scope.file.tags = $scope.file.tags.join(',')
 
 			$scope.editor.title = "Update "+$scope.file.title
 			$scope.editor.submitlabel = "Update"
 			$scope.editor.continuelabel = "Update and Add Another"
+		},function(message){
+			Materialize.toast(message);
 		})
 
 	} else {
