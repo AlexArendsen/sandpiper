@@ -2,6 +2,10 @@ app.controller('DashCtrl',['$scope','files',function InitializeDashController($s
 
 	$scope.ready = false;
 
+	$scope.filterBy = function(tag) {
+		$scope.searchText = tag;
+	}
+
 	files.dump(function(payload){
 		$scope.results = payload
 	}, function(error){
