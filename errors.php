@@ -8,7 +8,8 @@
 	}
 
 	$_SERVER['error_lookup'] = array(
-		"403" => makeErrorTuple("Forbidden","You must be logged in to view this content"),
+		"401" => makeErrorTuple("Unauthorized","You must be logged in to view this content"),
+		"403" => makeErrorTuple("Forbidden","You are forbidden from viewing this content"),
 		"404" => makeErrorTuple("Not Found","The file or resource requested does not exist"),
 		"500" => makeErrorTuple("Internal Server Error","The server has encountered an unexpected error. Please report this incident to your web administrator with details describing how / when the error occurred.")
 	);

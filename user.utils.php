@@ -1,6 +1,11 @@
 <?php
 
 	/**
+	 * Create a new user record in the database. Does not create user uploads
+	 * 		directory
+	 *
+	 * @see  function createUserUploadDirectory (create user uploads directory)
+	 * 
 	 * @param mysqli $mysqliLink: MySQLi link to database
 	 * @param string $userPublicId: public_id of user to be created
 	 * @param string $username: username of user to be created
@@ -36,6 +41,8 @@
 	}
 
 	/**
+	 * Create a user upload directory
+	 * 
 	 * @param  string $uploadsDirectory: Parent directory for uploads. Include
 	 * 		trailing slash
 	 * @param  string $userPublicId: New user public ID
@@ -52,7 +59,10 @@
 
 	/**
 	 * Deletes a user's database record. Cascades delete to user's file records
-	 * as well
+	 * as well.
+	 *
+	 * @see  function evacuateUserUploadsDirectory (move user's uploads
+	 *       directory to trash)
 	 * 
 	 * @param  mysqli $mysliLink: MySQLi link to database
 	 * @param  string $userPublicId: public_id of user to be deleted
@@ -77,6 +87,8 @@
 	}
 
 	/**
+	 * Get list of all users.
+	 * 
 	 * @param  mysqli $mysqliLink: MySQLi link to database
 	 * @return array: Array of associative arrays for every user with the 
 	 * 		following keys:
@@ -135,6 +147,8 @@
 	}
 
 	/**
+	 * Retreives one user's record from the database
+	 * 
 	 * @param mysqli $mysqliLink: MySQLi link to database
 	 * @param string $userPublicId: public_id of user to get
 	 * @return array: Associative array of user record fields with the following
@@ -219,7 +233,7 @@
 	}
 
 	/**
-	 * Verify the integrity of the given password hash
+ * Verify the integrity of the given password bcrypt hash
 	 * 
 	 * @param  string $passhash: bCrypt hash of password
 	 * @return void

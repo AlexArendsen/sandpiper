@@ -42,7 +42,6 @@
 			try {
 				// Insert record
 				insertFileRecord($i, $_SESSION['user'], $fileId, $_POST['file-title'], $_POST['file-tags']);
-				
 
 				// Upload document file if necessary
 				if($fileUploaded) {

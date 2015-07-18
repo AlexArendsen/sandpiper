@@ -29,6 +29,8 @@
 	}
 
 	/**
+	 * Removes an uploaded file from the file system.
+	 * 
 	 * @param string $directory: Directory of file to be deleted. Must include
 	 * 		trailing slash
 	 * @param string $filename: File of file to be deleted
@@ -44,6 +46,10 @@
 	}
 
 	/**
+	 * Removes a file record from the database. Does not remove file from
+	 * 		file system.
+	 * @see function deleteFile (deletes file from file system)
+	 * 
 	 * @param mysqli $mysqliLink: MySQLi link to database
 	 * @param string $filePublicId: public_id of file to delete
 	 * @param int $ownerId: ID of user who owns file to be deleted
@@ -68,8 +74,10 @@
 	}
 
 	/**
+	 * Retreive list of all files owned by the given user.
+	 * 
 	 * @param mysqli $mysqliLink: MySQLi link to database
-	 * @param int $ownerId: ID of user whose files will be dumped
+	 * @param int $ownerId: numeric ID of user whose files will be dumped
 	 * 
 	 * @return array: Array of associative arrays containing all files owned
 	 * 		by the given user
@@ -172,6 +180,10 @@
 
 	/**
 	 * Create new file record with the given plain fields
+	 *
+	 * @see function associateFilename (update FNAME field to filename)
+	 * @see function replaceFileWithUpload (upload file into user's uploads
+	 *      directory)
 	 * 
 	 * @param  mysqli $mysqliLink: MySQLi link to DB
 	 * @param  int $ownerId: ID of user that owns the file to be inserted
@@ -224,6 +236,7 @@
 	 * 		unsafe extension
 	 */
 	function replaceFileWithUpload($uploadDirectory, $fileSuperglobalKey, $filePublicId, $existingFileName) {
+		
 		// Check for safe extension
 		$fileExt = pathinfo($_FILES[$fileSuperglobalKey]['name'],PATHINFO_EXTENSION);
 		if(ctype_alnum($fileExt)) {
@@ -249,6 +262,8 @@
 
 	/**
 	 * Update plain fields of file record with the given PUBLIC_ID
+	 *
+	 * @see function associateFilename (update FNAME field to filename)
 	 * 
 	 * @param  mysqli $mysqliLink: MySQLi link to DB
 	 * @param  string $fileTitle: New file title field for record
