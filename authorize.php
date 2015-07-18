@@ -6,9 +6,18 @@
 	$fname = $_REQUEST['file'];
 	$fpath = 'uploads/'.$_SESSION['userPublic'].'/'.$fname;
 
+	$real = realpath(pathinfo($fpath)['dirname']);
+	error_log("Realpath = ".$real);
+	
+	// Check that user hasn't left their uploads directory (used ../ in the path)
+	if(strpos($real,"uploads/".$_SESSION['userPublic'])==false){
+		sendError($twig,'403');
+		exit;
+	}
+
 	if($arg['loggedIn']) {
 		if(!$_REQUEST['file']) {
-			sendError($twig,'403');
+			sendError($twig,'401');
 		} else {
 			if(!file_exists($fpath)){
 				sendError($twig,'404');
@@ -37,6 +46,6 @@
 				}
 			}
 		}
-	} else {sendError($twig,'403');}
+	} else {sendError($twig,'401');}
 
 ?>
