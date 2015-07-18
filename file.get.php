@@ -1,7 +1,7 @@
 <?php 
 
 	require_once 'init.php';
-	require_once 'utils.php';
+	require_once 'file.utils.php';
 
 	if($arg['loggedIn']) {
 		try {

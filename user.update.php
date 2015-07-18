@@ -1,55 +1,6 @@
 <?php
 	require_once 'init.php';
-	require_once 'utils.php';
-
-	/**
-	 * Update a user's record
-	 * 
-	 * @param  mysqli $mysqliLink: MySQLi link to database
-	 * @param  string $userPublicId: public_id of user to be updated
-	 * @param  string $username: new username for the user
-	 * @param  string $passhash: new password has for the user
-	 * @param  int $isAdmin: boolean integer indicating whether the user an
-	 * 		administrator or not
-	 * 
-	 * @return array: Associative array of the user record with the following
-	 * 		keys:
-	 * 			"username" => user's new username
-	 * 			"isAdmin" => boolean integer indicating whether or not the user
-	 * 				is now an administrator
-	 * 			"id" => user's public_id
-	 *
-	 * @throws mysqli_sql_exception: Thrown if an unexpected database issue
-	 * 		is encountered.
-	 */
-	function updateUserRecord($mysqliLink, $userPublicId, $username, $passhash, $isAdmin) {
-		if($s=$mysqliLink->prepare("
-			UPDATE
-				USERS
-			SET
-				USERNAME = ?,
-				PASSWORD = ?,
-				ISADMIN = ?
-			WHERE
-				PUBLIC_ID = ?
-		")) {
-			$s->bind_param('ssis',$username,$passhash,$isAdmin,$userPublicId);
-			if(!$s->execute()){
-				throw new mysqli_sql_exception("Error while executing user update script");
-			}
-			$out = array(
-				"username" => $username,
-				"isAdmin" => $isAdmin,
-				"id" => $userPublicId
-			);
-			$s->close();
-			return $out;
-		} else {
-			throw new mysqli_sql_exception("Error while preparing user update script");
-		}
-	}
-
-
+	require_once 'user.utils.php';
 
 	if($arg['loggedIn'] && $arg['isAdmin']) {
 
