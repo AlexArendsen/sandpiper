@@ -114,7 +114,11 @@
 	 * @param  string $filePublicId: ID of file to be inserted
 	 * @param  string $fileTitle: Title of file to be inserted
 	 * @param  string $fileTags: Tags field value for file to be inserted
+	 * 
 	 * @return void
+	 *
+	 * @throws mysqli_sql_exception: Thrown if an unexpected database problem
+	 * 		was encountered
 	 */
 	function insertFileRecord($mysqliLink, $ownerId, $filePublicId, $fileTitle, $fileTags) {
 		if($s=$mysqliLink->prepare("
@@ -148,32 +152,45 @@
 
 			// === Updating existing record
 
-			// Get existing record information
-			$record = getFileRecord($i,$_POST['file-id'],$_SESSION['user']);
+			try {
+				// Get existing record information
+				$record = getFileRecord($i,$_POST['file-id'],$_SESSION['user']);
 
-			// Upload new file, if necessary
-			if($fileUploaded) {
-				$filename = replaceFileWithUpload("uploads/".$_SESSION['userPublic']."/","file-file",$record['public_id'],$record['fname']);
-				associateFilename($i, $filename, $record['public_id']);
-			}
+				// Upload new file, if necessary
+				if($fileUploaded) {
+					try {
+						$filename = replaceFileWithUpload("uploads/".$_SESSION['userPublic']."/","file-file",$record['public_id'],$record['fname']);
+					} catch(RuntimeException $exc) { tossError($exc,"Existing file could not be removed"); }
+					associateFilename($i, $filename, $record['public_id']);
+				}
 
-			// Update record plain fields
-			updateFileRecord($i, $_POST['file-title'], $_POST['file-tags'], $record['public_id']);
+				// Update record plain fields
+				updateFileRecord($i, $_POST['file-title'], $_POST['file-tags'], $record['public_id']);
+			} catch (mysqli_sql_exception $exc){ tossError($exc, "There was an internal error while updating your file"); }
+			  catch (UnexpectedValueException $exc) {tossError($exc, "The file you are updating no longer exists"); }
+			  catch (InvalidArgumentException $exc) {tossError($exc, "The uploaded file has an unsafe extension"); }
+			  catch (Exception $exc) {tossError($exc, "Server is misconfigured, please contact your administrator"); }
+
+
 
 		} else {
 
 			// === Insert new record
 			$fileId = uniqid();
 
-			// Insert record
-			insertFileRecord($i, $_SESSION['user'], $fileId, $_POST['file-title'], $_POST['file-tags']);
-			
+			try {
+				// Insert record
+				insertFileRecord($i, $_SESSION['user'], $fileId, $_POST['file-title'], $_POST['file-tags']);
+				
 
-			// Upload document file if necessary
-			if($fileUploaded) {
-				$filename = replaceFileWithUpload("uploads/".$_SESSION['userPublic']."/","file-file",$fileId,false);
-				associateFilename($i, $filename, $fileId);
-			}
+				// Upload document file if necessary
+				if($fileUploaded) {
+					$filename = replaceFileWithUpload("uploads/".$_SESSION['userPublic']."/","file-file",$fileId,false);
+					associateFilename($i, $filename, $fileId);
+				}
+			} catch (mysqli_sql_exception $exc){ tossError($exc, "There was an internal error while uploading your file"); }
+			  catch (InvalidArgumentException $exc) {tossError($exc, "The uploaded file has an unsafe extension"); }
+			  catch (Exception $exc) {tossError($exc, "Server is misconfigured, please contact your administrator"); }
 
 		}
 

@@ -36,26 +36,33 @@
 	 * @param  string $userPublicId: public_id of user whose uploads directory
 	 * 		should be deleted
 	 * @return void
-	 *
+	 * 
 	 * @throws RuntimeException: Thrown if user's uploads directory cannot be
 	 *		moved to trash
 	 */
 	function evacuateUserUploadsDirectory($uploadsDirectory, $userPublicId) {
-		if(!rename("./".$uploadsDirectory.$userPublicId."/","./".$uploadsDirectory.".trash/".$userPublicId)) {
+
+		$userUploadsDirectory = "./".$uploadsDirectory.$userPublicId."/";
+
+		if(!rename($userUploadsDirectory,"./".$uploadsDirectory.".trash/".$userPublicId)) {
 			throw new RuntimeException("Failed to move user upload directory to trash");
 		}
 	}
 
 	if($arg['loggedIn'] && $arg['isAdmin']) {
 
-		// Move storage directory to trash
-		$userRecord = getUserRecord($i,$_GET['i']);
-		evacuateUserUploadsDirectory("uploads/",$userRecord['public_id']);
-		
-		// Delete user record (file records will delete via cascade)
-		deleteUserRecord($i, $userRecord['public_id']);
+		try {
+			// Move storage directory to trash
+			$userRecord = getUserRecord($i,$_GET['i']);
+			try {
+				evacuateUserUploadsDirectory("uploads/",$userRecord['public_id']);
+			} catch (RuntimeException $exc) { tossError($exc, "Could not remoe user's uploads directory"); }
+			
+			// Delete user record (file records will delete via cascade)
+			deleteUserRecord($i, $userRecord['public_id']);
 
-		echo success("User deleted successfully");
+			echo success("User deleted successfully");
+		} catch (mysql_sql_exception $exc) { tossError($exc, "There was an internal error while deleting the user"); }
 
 		
 	} else {echo error("Access Denied");}

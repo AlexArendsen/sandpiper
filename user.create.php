@@ -47,7 +47,7 @@
 	 * 		user's directory
 	 */
 	function createUserUploadDirectory($uploadsDirectory, $userPublicId) {
-		if(!mkdir("./".$uploadsDirectory.$userPublicId,755)) {
+		if(!mkdir("./".$uploadsDirectory.$userPublicId,0755)) {
 			throw new RuntimeException("Failed to create upload directory for new user");
 		}
 	}
@@ -56,21 +56,27 @@
 
 	if($arg['loggedIn'] && $arg['isAdmin']) {
 
-		// Check that password has been hashed
-		verifyPasswordIntegrity($_POST['password']);
+		try {
+			// Check that password has been hashed
+			verifyPasswordIntegrity($_POST['password']);
 
-		// Create user record
-		$userId = uniqid();
-		$isAdmin = filter_var($_POST['isAdmin'],FILTER_VALIDATE_BOOLEAN);
-		$newUserRecord = createUserRecord($i, $userId, $_POST['username'], $_POST['password'], $isAdmin);
+			$userId = uniqid();
+			
+			// Create uploads directory for user
+			createUserUploadDirectory("uploads/",$userId);
 
-		// Create uploads directory for user
-		createUserUploadDirectory("uploads/",$userId);
+			// Create user record
+			$isAdmin = filter_var($_POST['isAdmin'],FILTER_VALIDATE_BOOLEAN);
+			$newUserRecord = createUserRecord($i, $userId, $_POST['username'], $_POST['password'], $isAdmin);
 
-		echo json_encode(array(
-			"success" => true,
-			"userData" => $newUserRecord
-		));
+
+			echo json_encode(array(
+				"success" => true,
+				"userData" => $newUserRecord
+			));
+		} catch (mysqli_sql_exception $exc) { tossError($exc,"There was an internal issue while deleting your file."); }
+		  catch (RuntimeException $exc) {tossError($exc, "There was an error creating your uploads directory."); }
+		  catch (InvalidArgumentException $exc) { tossError($exc, $exc); }
 
 	} else {echo error("Access Denied");}
 ?>

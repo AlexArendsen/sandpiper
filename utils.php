@@ -16,7 +16,7 @@
 	 *  	parameters are not given.
 	 *  @throws mysqli_sql_exception: Thrown if there is an error executing the
 	 *  	SQL statement or fetching its results.
-	 *  @throws Exception: Thrown if no record with the given PUBLIC_ID is found.
+	 *  @throws UnexpectedValueException: Thrown if no record with the given PUBLIC_ID is found.
 	 */
 	function getFileRecord($mysqliLink, $filePublicId, $ownerId) {
 		if(!isset($mysqliLink)) {throw new InvalidArgumentException("MySQLi link is undefined");}
@@ -40,11 +40,17 @@
 				if(!$s->execute()){
 					throw new mysqli_sql_exception("Error while executing prepared statement");
 				} else {
-					if($s->fetch()) {
+					$fetchResult = $s->fetch();
+					if($fetchResult==true) {
 						if(!($output['public_id'] && $output['fname'])) {
-							throw new Exception("No file record found");
+							throw new UnexpectedValueException("No file record found");
 						}
-					} else { throw new mysqli_sql_exception("Failed to fetch file record results");}
+					} else if($fetchResult==false) {
+						throw new mysqli_sql_exception("Failed to fetch file record results: $mysqliLink->error");
+					} else {
+						throw new UnexpectedValueException("No file record found");
+					}
+
 					$s->close();
 				}
 		} else {

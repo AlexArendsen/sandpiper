@@ -53,6 +53,11 @@
   	echo "{\"error\":\"$emsg\",\"success\":false}";
   }
 
+  function tossError($exception, $sessionErrorMessage) {
+  	error_log($exception);
+  	$_SESSION['error'] = $sessionErrorMessage;
+  }
+
   // Succcess JSON response convenience function
   function success($msg) {
   	echo "{\"message\":\"$msg\",\"success\":true}";
