@@ -49,7 +49,7 @@
 							</small>
 						</div>
 						<a href="javascript:void(0)" class="tag light-blue lighten-2 white-text" ng-click="filterBy(item.type)">{{ item.type }}</span>
-						<a href="javascript:void(0)" class="tag grey lighten-4 grey-text" ng-repeat="tag in item.tags | limitTo: 5" ng-click="filterBy(tag)">{{ tag }}</a>
+						<a href="javascript:void(0)" class="tag grey lighten-4 grey-text" ng-repeat="tag in item.tags track by $index | limitTo: 5" ng-click="filterBy(tag)">{{ tag }}</a>
 					</div>
 					<div class="card-action">
 						<a href="authorize.php?file={{ item.file }}" target="_blank" class="right">View</a>
