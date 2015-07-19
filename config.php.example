@@ -1,0 +1,10 @@
+<?php
+	// MySQLi connection arguments
+	$MYSQL_HOST = "localhost";
+	$MYSQL_USER = "root";
+	$MYSQL_PASS = "toor";
+	$MYSQL_DBNAME = "SANDPIPER";
+
+	// Number of failed login attempts before captcha challenge is presented
+	$LOGIN_ATTEMPTS_CAPTCHA = 3;
+?>

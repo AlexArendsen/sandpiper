@@ -29,3 +29,5 @@ node_modules
 # Bower Components
 bower_components
 
+# Configuration file
+config.php

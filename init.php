@@ -3,14 +3,8 @@
 		session_start();
 	}
 
-	// Settings
-	$MYSQL_HOST = "localhost";
-	$MYSQL_USER = "root";
-	$MYSQL_PASS = "toor";
-	$MYSQL_DBNAME = "SANDPIPER";
-
-	$HASHING_TYPE = "bcrypt";
-	$LOGIN_ATTEMPTS_CAPTCHA = 3;
+	include "config.php";
+	
 	if (!isset($_SESSION['LOGIN_FAILS'])) {
 		$_SESSION['LOGIN_FAILS'] = 0;
 	}
