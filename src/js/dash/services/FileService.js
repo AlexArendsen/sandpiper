@@ -10,7 +10,7 @@ app.factory('files',['$http','fileUtils',function FileServiceInitialize($http,fi
 				.success(function(data, status){
 					if(data.success){
 						for(idx in data.payload) {
-							inf = fileUtils.getPathInfo(data.payload[idx].file,'UNKOWN')
+							inf = fileUtils.getPathInfo(data.payload[idx].file,'UNKOWN',data.payload[idx].has_thumb)
 							data.payload[idx].type = inf.extension.toUpperCase()
 							data.payload[idx].image = inf.image
 						}

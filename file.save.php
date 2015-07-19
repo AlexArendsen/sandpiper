@@ -12,7 +12,6 @@
 		if(!$isNew) {
 
 			// === Updating existing record
-
 			try {
 				// Get existing record information
 				$record = getFileRecord($i,$_POST['file-id'],$_SESSION['user']);
@@ -22,7 +21,14 @@
 					try {
 						$filename = replaceFileWithUpload("uploads/".$_SESSION['userPublic']."/","file-file",$record['public_id'],$record['fname']);
 					} catch(RuntimeException $exc) { tossError($exc,"Existing file could not be removed"); }
-					associateFilename($i, $filename, $record['public_id']);
+
+					// Try to create a thumbnail
+					$thumbField = false;
+					try {
+						$thumbField = createImageThumbnail("uploads/".$_SESSION['userPublic']."/",$filename);
+					} catch (Exception $exc) { /* Non-fatal */ }
+
+					associateFilename($i, $filename, $record['public_id'], $thumbField);
 				}
 
 				// Update record plain fields
@@ -46,7 +52,14 @@
 				// Upload document file if necessary
 				if($fileUploaded) {
 					$filename = replaceFileWithUpload("uploads/".$_SESSION['userPublic']."/","file-file",$fileId,false);
-					associateFilename($i, $filename, $fileId);
+
+					// Try to create a thumbnail
+					$thumbField = false;
+					try {
+						$thumbField = createImageThumbnail("uploads/".$_SESSION['userPublic']."/",$filename);
+					} catch (Exception $exc) { /* Non-fatal */ }
+					
+					associateFilename($i, $filename, $fileId, $thumbField);
 				}
 			} catch (mysqli_sql_exception $exc){ tossError($exc, "There was an internal error while uploading your file"); }
 			  catch (InvalidArgumentException $exc) {tossError($exc, "The uploaded file has an unsafe extension"); }

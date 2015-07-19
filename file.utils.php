@@ -7,25 +7,98 @@
 	 * @param  mysqli $mysqliLink: MySQLi link to DB
 	 * @param  string $filename: Filename of file
 	 * @param  string $filePublicId: PUBLIC_ID of file record
+	 * @param  boolean $fileThumb: Boolean representing whether or not the file
+	 *                             has a thumnail that should be used on the
+	 *                             dashboard.
 	 * @return void
 	 *
 	 * @throws mysqli_sql_exception: Thrown if an unexpected database problem
 	 * 		was encountered
 	 */
-	function associateFilename($mysqliLink, $filename, $filePublicId) {
+	function associateFilename($mysqliLink, $filename, $filePublicId, $fileThumb) {
 		if($s=$mysqliLink->prepare("
 			UPDATE
 				FILES
 			SET
-				FNAME = ?
+				FNAME = ?,
+				HASTHUMB = ?
 			WHERE
 				PUBLIC_ID = ?
 		")) {
-			$s->bind_param('ss',$filename,$filePublicId);
+			$fileThumb = filter_var($fileThumb,FILTER_VALIDATE_BOOLEAN);
+			$s->bind_param('sis',$filename,$fileThumb,$filePublicId);
 			if(!$s->execute()){throw new mysqli_sql_exception("Error while executing filename update script");}
 			$s->close();
 		} else {throw new mysqli_sql_exception("Error while preparing filename update script");
 		}
+	}
+
+	/**
+	 * Attempt to create a thumbnail out of the given image file.
+	 * 
+	 * @param  string $directory : Directory containing source image
+	 * @param  string $filename  : Filename of source image
+	 * @return mixed             : true on thumbnail creation success, false
+	 *                             on failure.
+	 *
+	 * @throws InvalidArgumentException: Thrown if source image file doesn't
+	 *         exist.
+	 *         
+	 * @throws RuntimeException: Thrown if there is a problem while processing
+	 *         the image.
+	 */
+	function createImageThumbnail($directory, $filename) {
+
+		$fpath = "./".$directory.$filename;
+		if(!file_exists($fpath)) {
+			throw new InvalidArgumentException("File does not exist");
+		}
+
+		$fileExt = strtolower(getFileExtension($filename));
+		$imgSrc = null;
+		$createImageFunction = null;
+		switch($fileExt) {
+			case "jpg":
+			case "jpeg":
+				$imgSrc = imagecreatefromjpeg($fpath);
+				break;
+			case "png":
+				$imgSrc = imagecreatefrompng($fpath);
+				break;
+			default:
+				return false;
+				break;
+		}
+
+		if($imgSrc==false||$imgSrc==null) {
+			throw new RuntimeException("Error while opening image");
+		}
+
+		$THUMBNAIL_WIDTH = 360;
+		$THUMBNAIL_CROP_HEIGHT = 240;
+		$oldX = imagesx($imgSrc);
+		$shrinkFactor = $oldX/$THUMBNAIL_WIDTH;
+		if($shrinkFactor<1){}
+
+		$oldY = imagesy($imgSrc);
+		$newX = $THUMBNAIL_WIDTH; // Same as $oldX/$shrinkFactor
+		$newY = $oldY/$shrinkFactor;
+		$verticalOffset = 0;
+		if($newY>$THUMBNAIL_CROP_HEIGHT) {
+			$newY = $THUMBNAIL_CROP_HEIGHT;
+			$verticalOffset = ($oldY/2)-(($newY*$shrinkFactor)/2);
+		}
+
+		$imgTgt = imagecreatetruecolor($newX, $newY);
+		imagecopyresampled(
+			$imgTgt,
+			$imgSrc,
+			0, 0, 0, $verticalOffset,
+			$newX, $newY, $oldX, $newY*$shrinkFactor
+		);
+
+		imagepng($imgTgt,$fpath.".thumb.png");
+		return true;
 	}
 
 	/**
@@ -91,6 +164,7 @@
 				PUBLIC_ID,
 				NAME,
 				FNAME,
+				HASTHUMB,
 				DATE_FORMAT(ENTRY_DATE,'%d %b %Y') AS EDATE,
 				TAGS
 			FROM
@@ -100,7 +174,7 @@
 			ORDER BY
 				ENTRY_DATE DESC")){
 			$s->bind_param("i",$ownerId);
-			$s->bind_result($id,$name,$fname,$edate,$tags);
+			$s->bind_result($id,$name,$fname,$hasThumb,$edate,$tags);
 			if($s->execute()){
 				$out = array();
 				while($s->fetch()) {
@@ -108,6 +182,7 @@
 							"id" => $id,
 							"title" => $name,
 							"file" => $fname,
+							"has_thumb" => $hasThumb,
 							"edate" => $edate,
 							"tags" => explode(',', $tags)
 						));
@@ -116,6 +191,16 @@
 				return $out;
 			} else {throw new mysqli_sql_exception("Error while executing file dump statement");}
 		} else {throw new mysqli_sql_exception("Error while preparing file dump statement");}
+	}
+
+	/**
+	 * Get file extension from the given filename
+	 * 
+	 * @param  string $filename : filename to inspect
+	 * @return string           : the extension of the input filename
+	 */
+	function getFileExtension($filename) {
+		return pathinfo($filename,PATHINFO_EXTENSION);
 	}
 
 	/**
@@ -128,6 +213,8 @@
 	 * 		public_id => PUBLIC_ID of the queried file
 	 * 		name => name (title) of the queried file
 	 * 		fname => filename of the queried file
+	 * 		has_thumb => boolean integer indicating whether the file has a
+	 * 			thumbnail
 	 * 		tags => tags of the queried file
 	 *
 	 *  @throws InvalidArgumentException: Thrown if arguments for either of the
@@ -146,6 +233,7 @@
 				PUBLIC_ID,
 				NAME,
 				FNAME,
+				HASTHUMB,
 				TAGS
 			FROM
 				FILES
@@ -154,7 +242,7 @@
 				AND OWNER_ID = ?
 		")) {
 				$s->bind_param('si', $filePublicId, $ownerId);
-				$s->bind_result($output['public_id'],$output['name'],$output['fname'],$output['tags']);
+				$s->bind_result($output['public_id'],$output['name'],$output['fname'],$output['has_thumb'],$output['tags']);
 				if(!$s->execute()){
 					throw new mysqli_sql_exception("Error while executing prepared statement");
 				} else {
@@ -238,7 +326,7 @@
 	function replaceFileWithUpload($uploadDirectory, $fileSuperglobalKey, $filePublicId, $existingFileName) {
 		
 		// Check for safe extension
-		$fileExt = pathinfo($_FILES[$fileSuperglobalKey]['name'],PATHINFO_EXTENSION);
+		$fileExt = getFileExtension($_FILES[$fileSuperglobalKey]['name']);
 		if(ctype_alnum($fileExt)) {
 
 			// Generate new filename
