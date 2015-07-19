@@ -33,25 +33,23 @@ dependencies are provided for installations on LAMP platforms:
 	* `.htaccess` permission allowed
 * PHP >= 5.5
 	* `mysqli` extension enabled
-	* `gd` extension enabled
+	* `gd` extension enabled, >=1.8
 
 
 1. Place into desired server directory.
-2. Create database called `SANDPIPER` (or whatever name you'd like)
-3. Modify the connection variables at the top of `init.php` to match your MySQL
-server name, login credentials, and the db name you picked in step 2.
-4. Run `install.sql` and `backdoor.bcrypt.sql` found within the `install/`
-directory against your databse.
-5. Create the directory `uploads/de4d2e5d-b744`
-6. Ensure that your server user (eg, `www-data` or `http`) and group have read
+2. Go to `install/`, run `easy_install.sh` and follow the prompts.
+3. Run `new_user.sh` to create an administrative user.
+4. Copy `config.php.example` to `config.php`, and edit the MySQL connection
+arguments therein.
+5. Ensure that your server user (eg, `www-data` or `http`) and group have read
 and write permissions in the `uploads/` directory and everything within it
-7. Run `bower install` to download the necessary dependencies.
-8. Create a scheduled job on your server to empty the `uploads/.trash`
+6. Run `bower install` to download the necessary dependencies.
+7. Create a scheduled job on your server to empty the `uploads/.trash`
 directory on a regular interval.
 
-Log into the web interface with the username `DEFAULT` and password
-`DEFAULTPASSWORD`. The default user account may be removed and replaced with
-additional accounts through the web interface.
+Log into the web interface with the login credentials you supplied in the
+`easy_install.sh` script. User accounts may be managed through the web
+interface.
 
 ## Credit
 
