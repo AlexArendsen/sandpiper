@@ -4,7 +4,7 @@
 	}
 
 	include "config.php";
-	
+
 	if (!isset($_SESSION['LOGIN_FAILS'])) {
 		$_SESSION['LOGIN_FAILS'] = 0;
 	}
@@ -12,6 +12,12 @@
 
 	// Connect to MySQL
 	$i = new mysqli($MYSQL_HOST,$MYSQL_USER,$MYSQL_PASS,$MYSQL_DBNAME);
+
+	if(mysqli_connect_error()){
+		header("HTTP/1.1 501 Not Implemented");
+		echo "<h3>Error 501 (Not Implemented)</h3><p>Sandpiper cannot connect to the database. Please contact your system administrator.</p>";
+		exit;
+	}
 
 	// Intialize Twig
 	require_once 'lib/Twig/Autoloader.php';

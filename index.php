@@ -5,8 +5,8 @@
 	if($arg['loggedIn']) {
 		echo $twig->render("dash.html",$arg);
 	} else {
-		$arg['message'] = $_SESSION['LOGIN_ERROR'];
-		$arg['username'] = $_SESSION['LOGIN_USERNAME'];
+		if(isset($_SESSION['LOGIN_ERROR'])){$arg['message'] = $_SESSION['LOGIN_ERROR'];}
+		if(isset($_SESSION['LOGIN_USERNAME'])){$arg['username'] = $_SESSION['LOGIN_USERNAME'];}
 
 		if($LOGIN_CAPTCHA_TRIGGERED) {
 			include("simple-php-captcha/simple-php-captcha.php");

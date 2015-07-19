@@ -38,7 +38,7 @@
 			} else {homeError($twig, "Internal System Error",$arg);} // Error while executing prepared statement
 			$s->close();
 
-		} else {homeError($twig, "Internal System Error",$arg);} // Error while preparing statement
+		} else {homeError($twig, "System error. Contact system administrator.",$arg);} // Error while preparing statement. DB probably isn't install; run install/install.sql
 	} else {
 		homeError($twig,"Please enter username and password",$arg);
 	}
