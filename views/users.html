@@ -48,6 +48,7 @@
 						</div>
 						<div class="row">
 							<div class="col s12">
+								<span class="grey-text" ng-hide="!editor.id">To change user password, enter it below. Leave empty to keep current password.</span>
 								<div class="input-field">
 									<input type="password" ng-required="!editor.id" ng-model="editor.password" id="password-input">
 									<label for="password-input">Password</label>
