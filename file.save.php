@@ -51,12 +51,17 @@
 
 				// Upload document file if necessary
 				if($fileUploaded) {
-					$filename = replaceFileWithUpload("uploads/".$_SESSION['userPublic']."/","file-file",$fileId,false);
+					$userUploadsDirectory = "uploads/".$_SESSION['userPublic']."/";
+
+					// If user uploads directory doesn't exist, create it
+					if(!file_exists($userUploadsDirectory)) {mkdir($userUploadsDirectory);}
+					
+					$filename = replaceFileWithUpload($userUploadsDirectory,"file-file",$fileId,false);
 
 					// Try to create a thumbnail
 					$thumbField = false;
 					try {
-						$thumbField = createImageThumbnail("uploads/".$_SESSION['userPublic']."/",$filename);
+						$thumbField = createImageThumbnail($userUploadsDirectory,$filename);
 					} catch (Exception $exc) { /* Non-fatal */ }
 					
 					associateFilename($i, $filename, $fileId, $thumbField);
